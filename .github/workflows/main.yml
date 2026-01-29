@@ -29,7 +29,7 @@ jobs:
     - name: Компилируем
       run: |
         arduino-cli compile \
-          --fqbn esp32:esp32:esp32s3:FlashMode=dio,PartitionScheme=16M_Fat \
+          --fqbn esp32:esp32:esp32s3 \
           --output-dir ./build \
           ./ESP-HACK-main/ESP-HACK-Tembed/
     
