@@ -19,34 +19,60 @@
 #define PIN_ENCODER_A  2  // Энкодер A
 #define PIN_ENCODER_B  1  // Энкодер B
 
-// Твой старый код ниже...
-; PlatformIO Project Configuration File
-;
-;   Build options: build flags, source filter
-;   Upload options: custom upload port, speed and extra flags
-;   Library options: dependencies, extra library storages
-;   Advanced options: extra scripting
-;
-; Please visit documentation for the other options and examples
-; https://docs.platformio.org/page/projectconf.html
+// Подключаем библиотеки
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SH110X.h>
+#include <GyverButton.h>
+#include <IRremoteESP8266.h>
+#include <ELECHOUSE_CC1101_SRC_DRV.h>
+#include <RCSwitch.h>
+#include <NimBLEDevice.h>
+#include <RF24.h>
 
-[env:esp32dev]
-platform = espressif32
-board = esp32dev
-framework = arduino
-monitor_speed = 115200
-board_build.partitions = huge_app.csv
+// Объекты для работы с периферией
+// Дисплей (укажи правильный адрес если нужно)
+Adafruit_SH1106G display(128, 64, &Wire, -1);
 
-lib_deps =
-    adafruit/Adafruit SH110X@^2.1.13
-    gyverlibs/GyverButton@^3.8
-    crankyoldgit/IRremoteESP8266@^2.8.6
-    lsatan/SmartRC-CC1101-Driver-Lib@^2.5.7
-    sui77/rc-switch@^2.6.4
-    h2zero/NimBLE-Arduino@^2.3.2
-    nrf24/RF24@^1.5.0
-    
+// CC1101 через SPI
+SPIClass spiCC1101(HSPI);
 
-// 3 to 1 build
-extra_scripts = 
-    post:build.py
+// Кнопка энкодера
+GButton encoderBtn(BUTTON_ENCODER, LOW_PULL);
+
+// ==================== ТВОЙ КОД НИЖЕ ====================
+
+void setup() {
+  Serial.begin(115200);
+  
+  // Инициализация SPI для CC1101
+  spiCC1101.begin(CC1101_SCK, CC1101_MISO, CC1101_MOSI, CC1101_SS);
+  pinMode(CC1101_SS, OUTPUT);
+  
+  // Инициализация дисплея (пример)
+  if(!display.begin(0x3C, OLED_RESET)) {
+    Serial.println(F("SH110x allocation failed"));
+    for(;;);
+  }
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SH110X_WHITE);
+  display.setCursor(0,0);
+  display.println(F("ESP-HACK T-Embed"));
+  display.display();
+  
+  // Инициализация CC1101 (пример)
+  ELECHOUSE_cc1101.Init();
+  ELECHOUSE_cc1101.setMHZ(433.92);
+  
+  Serial.println("Setup complete");
+}
+
+void loop() {
+  // Твой основной код здесь
+  
+  encoderBtn.tick();  // Обработка кнопки
+  
+  delay(10);
+}
