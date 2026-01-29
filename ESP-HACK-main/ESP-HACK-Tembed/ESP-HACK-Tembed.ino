@@ -47,6 +47,6 @@ lib_deps =
     nrf24/RF24@^1.5.0
     
 
-# 3 to 1 build
+// 3 to 1 build
 extra_scripts = 
     post:build.py
