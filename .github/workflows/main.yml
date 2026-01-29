@@ -25,6 +25,13 @@ jobs:
       run: |
         arduino-cli lib install "TFT_eSPI"
         arduino-cli lib install "SmartRC-CC1101-Driver-Lib"
+        arduino-cli lib install "Adafruit SH110X"
+        arduino-cli lib install "GyverButton"
+        arduino-cli lib install "IRremoteESP8266"
+        arduino-cli lib install "rc-switch"
+        arduino-cli lib install "NimBLE-Arduino"
+        arduino-cli lib install "RF24"
+        arduino-cli lib install "ArduinoJson"
     
     - name: Компилируем
       run: |
