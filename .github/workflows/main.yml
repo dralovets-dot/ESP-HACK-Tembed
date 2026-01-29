@@ -1,0 +1,48 @@
+name: Сборка для T-Embed CC1101
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Копируем код
+      uses: actions/checkout@v3
+    
+    - name: Устанавливаем Arduino CLI
+      uses: arduino/setup-arduino-cli@v1.1.1
+    
+    - name: Настройка ESP32
+      run: |
+        arduino-cli config init --overwrite
+        arduino-cli config add board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+        arduino-cli core update-index
+        arduino-cli core install esp32:esp32@2.0.17
+    
+    - name: Устанавливаем библиотеки
+      run: |
+        arduino-cli lib install "TFT_eSPI"
+        arduino-cli lib install "SmartRC-CC1101-Driver-Lib"
+    
+    - name: Компилируем
+      run: |
+        arduino-cli compile \
+          --fqbn esp32:esp32:esp32s3:PartitionScheme=default_16MB,FlashMode=dio,FlashFreq=80 \
+          --output-dir ./build \
+          ./
+    
+    - name: Переименовываем файлы
+      run: |
+        mkdir -p firmware
+        cp build/*.ino.bin firmware/firmware_tembed.bin
+        cp build/*.ino.bootloader.bin firmware/bootloader.bin || true
+        cp build/*.ino.partitions.bin firmware/partitions.bin || true
+        ls -la firmware/
+    
+    - name: Загружаем артефакт
+      uses: actions/upload-artifact@v4
+      with:
+        name: firmware-tembed-cc1101
+        path: firmware/
