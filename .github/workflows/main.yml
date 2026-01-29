@@ -31,7 +31,7 @@ jobs:
         arduino-cli compile \
           --fqbn esp32:esp32:esp32s3:PartitionScheme=default_16MB,FlashMode=dio,FlashFreq=80 \
           --output-dir ./build \
-          ./
+          ./ESP-HACK-main/ESP-HACK-Tembed/
     
     - name: Переименовываем файлы
       run: |
