@@ -21,17 +21,20 @@ jobs:
         arduino-cli core update-index
         arduino-cli core install esp32:esp32@2.0.17
     
-    - name: Устанавливаем библиотеки
+        - name: Устанавливаем библиотеки оригинала + T-Embed
       run: |
-        arduino-cli lib install "TFT_eSPI"
-        arduino-cli lib install "SmartRC-CC1101-Driver-Lib"
-        arduino-cli lib install "Adafruit SH110X"
+        # Оригинальные библиотеки ESP-HACK (адаптируй под список из оригинала)
+        arduino-cli lib install "Adafruit SH110X"  # Если используется
         arduino-cli lib install "GyverButton"
         arduino-cli lib install "IRremoteESP8266"
+        arduino-cli lib install "SmartRC-CC1101-Driver-Lib"
         arduino-cli lib install "rc-switch"
         arduino-cli lib install "NimBLE-Arduino"
         arduino-cli lib install "RF24"
-        arduino-cli lib install "ArduinoJson"
+        
+        # Для T-Embed
+        arduino-cli lib install "TFT_eSPI"
+        arduino-cli lib install "GyverEncoder"
     
     - name: Компилируем
       run: |
